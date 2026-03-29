@@ -20,10 +20,11 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 const CHUNK_SIZE = 10
 
-const HompAllConten = () => {
-  const userId = '693d7523bd07d8d328896043'
+const HompAllConten = ({ selectedCity }) => {
   const dispatch = useDispatch()
   const router = useRouter()
+  const { user } = useSelector(state => state.auth)
+  const userId = user?._id
 
   const { items, loading } = useSelector(state => state.TravelPlace)
   const { likesByLocation } = useSelector(state => state.interaction)
@@ -33,8 +34,10 @@ const HompAllConten = () => {
   const [selectedItem, setSelectedItem] = useState(null)
 
   useEffect(() => {
-    dispatch(fetchTravelPlace({ userId, limit: 30 }))
-  }, [])
+    if (userId) {
+      dispatch(fetchTravelPlace({ userId, city: selectedCity, limit: 30 }))
+    }
+  }, [userId, selectedCity])
 
   useEffect(() => {
     if (visibleCount >= items.length) return

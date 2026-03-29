@@ -13,6 +13,7 @@ const AddModal = ({ visible, onClose }) => {
 
           <TouchableOpacity style={styles.option}
             onPress={()=>router.push('TravellPlanner/CreateTrip')}
+            // onPress={()=>router.push('TravellPlanner/Transport')}
           >
             <Ionicons name="map-outline" size={22} />
             <Text style={styles.optionText}>Create Trip</Text>

@@ -56,8 +56,23 @@ export const RegisterUser = createAsyncThunk(
       }
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || 'Login failed'
+        error.response?.data?.message || 'Registration failed'
       )
+    }
+  }
+)
+
+// Fetch User Profile
+export const fetchUserProfile = createAsyncThunk(
+  'auth/fetchUserProfile',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/auth/profile/${userId}`
+      )
+      return res.data
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch' )
     }
   }
 )
@@ -83,9 +98,16 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       //loadstate
+      .addCase(AuthloadState.pending, (state) => {
+        state.loading = true
+      })
       .addCase(AuthloadState.fulfilled, (state, action) => {
         state.user = action.payload.user
         state.token = action.payload.token
+        state.loading = false
+      })
+      .addCase(AuthloadState.rejected, (state) => {
+        state.loading = false
       })
       //login
       .addCase(loginUser.pending, (state) => {
@@ -119,6 +141,12 @@ const authSlice = createSlice({
         state.user = null
         state.token = null
         state.error = null
+      })
+      // fetch profile
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.profile = action.payload.profile
+        // Sync user data if it's more complete
+        state.user = { ...state.user, ...action.payload.user }
       })
   },
 })

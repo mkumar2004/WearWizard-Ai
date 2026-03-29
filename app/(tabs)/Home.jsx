@@ -111,7 +111,7 @@ const Home = () => {
         <View style={{top:16}}>
           <Text style={{fontSize:25,fontWeight:'600'}} >✨ Discover Hidden Places</Text>
           <Text style={{fontSize:15,margin:12,textAlign:'center',color:'grey'}}>Curated by Reatess AI</Text>
-           <HompAllConten key="home-content" />
+           <HompAllConten key="home-content" selectedCity={city || detectedLocation?.city} />
         </View>
       </ScrollView>
       {/* Floating Plus Icon */}

@@ -15,11 +15,12 @@ const CARD_SPACING = 10
 
 const HomeScreenScrolll = () => {
   const dispatch = useDispatch()
-    const router = useRouter()
+  const router = useRouter()
   const flatListRef = useRef(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const { seasons = [], loading } = useSelector((state) => state.season)
-  const userId = '69358cdd68c65b4d11a8cc58'
+  const { user } = useSelector((state) => state.auth)
+  const userId = user?._id
 
   // Get Season Icon Component
   const getSeasonIcon = (seasonType) => {
@@ -73,7 +74,7 @@ const HomeScreenScrolll = () => {
   // Fetch data
   useEffect(() => {
     dispatch(fetchSeasonalData(userId))
-  }, [dispatch])
+  }, [userId])
 
   // Auto scroll
   useEffect(() => {
@@ -101,9 +102,23 @@ const HomeScreenScrolll = () => {
     )
   }
 
-   const HandleSeason =()=>{
-     router.push('Component/AllSeasonal')
-   }
+  const handleSeasonPress = (item) => {
+    const seasonType = item?.seasonType
+    const season = item?.data?.[seasonType] || {}
+    router.push({
+      pathname: 'Component/AllSeasonal',
+      params: {
+        city: season.city || 'Madurai',
+        seasonType: seasonType || 'summer',
+        title: season.title || '',
+        subtitle: season.subtitle || '',
+        numberOfDays: season.numberOfDays || 3,
+        rating: season.rating || 4.5,
+        cost: season.cost || '',
+      }
+    })
+  }
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -150,7 +165,7 @@ const HomeScreenScrolll = () => {
           return (
             <View style={styles.cardWrapper}>
               <TouchableOpacity
-                onPress={HandleSeason}
+                onPress={() => handleSeasonPress(item)}
                 style={[
                   styles.card,
                   { backgroundColor: colors.bg }

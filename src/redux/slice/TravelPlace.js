@@ -6,9 +6,10 @@ const API = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/Data/Location`
 
 export const fetchTravelPlace = createAsyncThunk(
   'TravelPlace/fetch',
-  async ({ userId, limit = 10 }) => {
+  async ({ userId, city = null, limit = 10 }) => {
     const res = await axios.post(API, {
       _id: userId,
+      city,
       limit,
     })
     return res.data
@@ -18,10 +19,11 @@ export const fetchTravelPlace = createAsyncThunk(
 
 export const fetchMoreTravelPlace = createAsyncThunk(
   'TravelPlace/fetchMore',
-  async ({ userId, lastId, limit = 10 }) => {
+  async ({ userId, lastId, city = null, limit = 10 }) => {
     const res = await axios.post(API, {
       _id: userId,
       lastId,
+      city,
       limit,
     })
     return res.data
